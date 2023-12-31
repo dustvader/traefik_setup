@@ -4,7 +4,7 @@ services:
   traefik:
     image: traefik:v2.3
     command:
-      - --api.insecure=true
+      - --api.insecure=false
       - --providers.docker
       - --providers.docker.exposedByDefault=false
       - --entrypoints.web.address=:80
