@@ -1,5 +1,9 @@
 version: "3"
 
+networks:
+  web:
+    external: true
+
 services:
   traefik:
     image: traefik:v2.3
@@ -16,3 +20,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /etc/traefik/acme/acme.json:/etc/traefik/acme/acme.json
+    networks:
+      - web
