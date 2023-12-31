@@ -1,0 +1,22 @@
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+  traefik:
+    address: ":8080"
+
+providers:
+  docker:
+    exposedByDefault: false
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "jlkh8i7zihz@example.com"
+      storage: "/etc/traefik/acme/acme.json"
+      tlsChallenge: {}
