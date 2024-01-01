@@ -17,7 +17,7 @@ providers:
 certificatesResolvers:
   myresolver:
     acme:
-      email: "jlkh8i7zihz@example.com"
+      email: "jlkh8i7zihzfjj8@yahoo.com"
       storage: "/etc/traefik/acme/acme.json"
       httpChallenge:
         entryPoint: web
