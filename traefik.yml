@@ -19,4 +19,20 @@ certificatesResolvers:
     acme:
       email: "jlkh8i7zihz@example.com"
       storage: "/etc/traefik/acme/acme.json"
-      tlsChallenge: {}
+      httpChallenge:
+        entryPoint: web
+
+http:
+  routers:
+    http-catchall:
+      rule: "HostRegexp(`{host:.+}`)"
+      entrypoints:
+        - "web"
+      middlewares:
+        - "redirect-to-https"
+      service: "noop@internal"
+
+middlewares:
+  redirect-to-https:
+    redirectScheme:
+      scheme: "https"

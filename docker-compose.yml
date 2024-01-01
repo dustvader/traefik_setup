@@ -1,12 +1,12 @@
 version: "3"
 
 networks:
-  web:
+  traefik-public:
     external: true
 
 services:
   traefik:
-    image: traefik:v2.3
+    image: traefik:v2.5
     command:
       - --api.insecure=false
       - --providers.docker
@@ -21,4 +21,4 @@ services:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /etc/traefik/acme/acme.json:/etc/traefik/acme/acme.json
     networks:
-      - web
+      - traefik-public
