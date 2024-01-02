@@ -2,6 +2,9 @@ api:
   dashboard: true
   insecure: false
 
+log:
+  level: DEBUG
+
 entryPoints:
   web:
     address: ":80"
@@ -12,30 +15,23 @@ providers:
   docker:
     exposedByDefault: false
 
-certificatesResolvers:
-  myresolver:
-    acme:
-      email: "jlkh8i7zihzfjj8@yahoo.com"
-      storage: "/etc/traefik/acme/acme.json"
-      httpChallenge:
-        entryPoint: web
-
 http:
   middlewares:
-    basic-auth:
-      basicAuth:
-        users:
-          - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
     redirect-to-https:
       redirectScheme:
-        scheme: "https"
-
+        scheme: https
+        permanent: true
+        
   routers:
     dashboard:
       rule: "PathPrefix(`/dashboard`)"
       entrypoints:
         - "websecure"
       service: "api@internal"
+      middlewares:
+        - "basic-auth"
+      tls:
+        certResolver: "myresolver"
 
     http-catchall:
       rule: "HostRegexp(`{host:.+}`)"
@@ -44,3 +40,18 @@ http:
       middlewares:
         - "redirect-to-https"
       service: "noop@internal"
+
+http:
+  middlewares:
+    basic-auth:
+      basicAuth:
+        users:
+          - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "jlkh8i7zihzfjj8@yahoo.com"
+      storage: "/etc/traefik/acme/acme.json"
+      httpChallenge:
+        entryPoint: web
