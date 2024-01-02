@@ -36,10 +36,6 @@ http:
       entrypoints:
         - "websecure"
       service: "api@internal"
-      middlewares:
-        - "basic-auth"
-      tls:
-        certResolver: "myresolver"
 
     http-catchall:
       rule: "HostRegexp(`{host:.+}`)"
