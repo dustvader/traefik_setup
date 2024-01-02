@@ -1,3 +1,6 @@
+api:
+  dashboard: true
+
 entryPoints:
   web:
     address: ":80"
@@ -15,26 +18,19 @@ http:
         scheme: https
         permanent: true
 
-    dashboard-stripprefix:
-      stripPrefix:
-        prefixes:
-          - "/dashboard"
-
     basic-auth:
       basicAuth:
         users:
           - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
 
   routers:
-    #traefik:
-    #  rule: "PathPrefix(`/dashboard`)"
-    #  service: "api@internal"
-    #  entrypoints:
-    #    - "websecure"
-    #  middlewares:
-    #    - "dashboard-stripprefix"
-    #  tls:
-    #    certResolver: "myresolver"
+    traefik:
+      rule: "PathPrefix(`/traefik`)"
+      service: "api@internal"
+      middlewares:
+        - "basic-auth"
+      entrypoints:
+        - "websecure"
 
     http-catchall:
       rule: "HostRegexp(`{host:.+}`)"
@@ -43,6 +39,8 @@ http:
       middlewares:
         - "redirect-to-https"
       service: "noop@internal"
+      tls:
+        certResolver: myresolver
 
 certificatesResolvers:
   myresolver:
