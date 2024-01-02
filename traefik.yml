@@ -1,8 +1,7 @@
 api:
   dashboard: true
 
-accessLog:
-  filePath: "/etc/traefik/logs"
+accessLog: {}
 
 entryPoints:
   web:
