@@ -30,7 +30,7 @@ http:
 
   routers:
     traefik:
-      rule: "PathPrefix(`/traefik`)"
+      rule: "Host(`appleglobalprices.com`)"
       service: "api@internal"
       middlewares:
         - "basic-auth"
@@ -39,15 +39,15 @@ http:
       tls:
         certResolver: myresolver
 
-    http-catchall:
-      rule: "HostRegexp(`{host:.+}`)"
-      entrypoints:
-        - "web"
-      middlewares:
-        - "redirect-to-https"
-      service: "noop@internal"
-      tls:
-        certResolver: myresolver
+    #http-catchall:
+    #  rule: "HostRegexp(`{host:.+}`)"
+    #  entrypoints:
+    #    - "web"
+    #  middlewares:
+    #    - "redirect-to-https"
+    #  service: "noop@internal"
+    #  tls:
+    #    certResolver: myresolver
 
 certificatesResolvers:
   myresolver:
