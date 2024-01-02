@@ -6,6 +6,8 @@ log:
   level: DEBUG
 
 entryPoints:
+  web:
+    address: ":80"
   websecure:
     address: ":443"
 
@@ -13,20 +15,40 @@ providers:
   docker:
     exposedByDefault: false
 
-certificatesResolvers:
-  myresolver:
-    acme:
-      email: "your-email@example.com"
-      storage: "/etc/traefik/acme/acme.json"
-      httpChallenge:
-        entryPoint: websecure
-
 http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+        basic-auth:
+    basicAuth:
+      users:
+        - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
+
   routers:
     dashboard:
-      rule: "PathPrefix(`/dashboard`)"
+      rule: "PathPrefix(`/dashboard/`)"
       entrypoints:
         - "websecure"
       service: "api@internal"
+      middlewares:
+        - "basic-auth"
       tls:
         certResolver: "myresolver"
+
+    http-catchall:
+      rule: "HostRegexp(`{host:.+}`)"
+      entrypoints:
+        - "web"
+      middlewares:
+        - "redirect-to-https"
+      service: "noop@internal"
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "jlkh8i7zihzfjj8@yahoo.com"
+      storage: "/etc/traefik/acme/acme.json"
+      httpChallenge:
+        entryPoint: web

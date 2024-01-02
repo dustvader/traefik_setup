@@ -1,11 +1,23 @@
-version: "3.7"
+version: "3"
+
+networks:
+  traefik-public:
+    external: true
 
 services:
   traefik:
     image: traefik:v2.5
+    command:
+      - --providers.docker
+      - --providers.docker.exposedByDefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
     ports:
+      - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /etc/traefik/acme/acme.json:/etc/traefik/acme/acme.json
+    networks:
+      - traefik-public
