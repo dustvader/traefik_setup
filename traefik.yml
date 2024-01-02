@@ -32,6 +32,7 @@ http:
       entrypoints:
         - "websecure"
       service: "api@internal"
+      certResolver: "myresolver"
 
     http-catchall:
       rule: "HostRegexp(`{host:.+}`)"
