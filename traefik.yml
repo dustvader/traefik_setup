@@ -1,5 +1,6 @@
 api:
   dashboard: true
+  insecure: true
 
 log:
   level: DEBUG
@@ -9,6 +10,8 @@ entryPoints:
     address: ":80"
   websecure:
     address: ":443"
+  dashboard:
+    address: ":8080"
 
 providers:
   docker:
@@ -27,13 +30,10 @@ http:
 
   routers:
     dashboard:
-      rule: "PathPrefix(`/x/`)"
+      rule: "PathPrefix(`/dashboard`)"
       entrypoints:
-        - "websecure"
+        - "dashboard"
       service: "api@internal"
-      middlewares:
-      tls:
-        certResolver: "myresolver"
 
     http-catchall:
       rule: "HostRegexp(`{host:.+}`)"
