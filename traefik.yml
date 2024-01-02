@@ -1,14 +1,12 @@
 api:
   dashboard: true
-  insecure: true
+  insecure: false
 
 entryPoints:
   web:
     address: ":80"
   websecure:
     address: ":443"
-  traefik:
-    address: ":8080"
 
 providers:
   docker:
@@ -23,7 +21,26 @@ certificatesResolvers:
         entryPoint: web
 
 http:
+  middlewares:
+    basic-auth:
+      basicAuth:
+        users:
+          - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
+    redirect-to-https:
+      redirectScheme:
+        scheme: "https"
+
   routers:
+    dashboard:
+      rule: "PathPrefix(`/dashboard`)"
+      entrypoints:
+        - "websecure"
+      service: "api@internal"
+      middlewares:
+        - "basic-auth"
+      tls:
+        certResolver: "myresolver"
+
     http-catchall:
       rule: "HostRegexp(`{host:.+}`)"
       entrypoints:
@@ -31,8 +48,3 @@ http:
       middlewares:
         - "redirect-to-https"
       service: "noop@internal"
-
-middlewares:
-  redirect-to-https:
-    redirectScheme:
-      scheme: "https"
