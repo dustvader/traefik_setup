@@ -1,6 +1,5 @@
 api:
   dashboard: true
-  insecure: false
 
 log:
   level: DEBUG
@@ -21,19 +20,18 @@ http:
       redirectScheme:
         scheme: https
         permanent: true
-        basic-auth:
-    basicAuth:
-      users:
-        - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
+    basic-auth:
+      basicAuth:
+        users:
+          - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
 
   routers:
     dashboard:
-      rule: "PathPrefix(`/dashboard/`)"
+      rule: "PathPrefix(`/x/`)"
       entrypoints:
         - "websecure"
       service: "api@internal"
       middlewares:
-        - "basic-auth"
       tls:
         certResolver: "myresolver"
 
