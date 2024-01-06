@@ -1,10 +1,9 @@
 api:
   dashboard: true
 
-log:
-  level: DEBUG
-
-accessLog: {}
+providers:
+  docker:
+    exposedByDefault: false
 
 entryPoints:
   web:
@@ -12,47 +11,26 @@ entryPoints:
   websecure:
     address: ":443"
 
-providers:
-  docker:
-    exposedByDefault: false
-
-http:
-  middlewares:
-    redirect-to-https:
-      redirectScheme:
-        scheme: https
-        permanent: true
-
-    basic-auth:
-      basicAuth:
-        users:
-          - "master:$2y$05$ch15izrKErZJ3iwEPcVKOOR7kshqV5hjZdc0gjH6qQfJwiXULTJTy"
-
-  routers:
-    traefik:
-      rule: "Host(`appleglobalprices.com`) && PathPrefix(`/traefik`)"
-      service: "api@internal"
-      middlewares:
-        - "basic-auth"
-      entrypoints:
-        - "websecure"
-      tls:
-        certResolver: myresolver
-
-    #http-catchall:
-    #  rule: "HostRegexp(`{host:.+}`)"
-    #  entrypoints:
-    #    - "web"
-    #  middlewares:
-    #    - "redirect-to-https"
-    #  service: "noop@internal"
-    #  tls:
-    #    certResolver: myresolver
-
 certificatesResolvers:
   myresolver:
     acme:
-      email: "jlkh8i7zihzfjj8@yahoo.com"
-      storage: "/etc/traefik/acme/acme.json"
-      httpChallenge:
-        entryPoint: web
+      tlsChallenge: true
+      email: ewfewefwe@dslkdlk.com
+      storage: /etc/traefik/acme/acme.json
+
+http:
+  routers:
+    traefik:
+      rule: Host(`appleglobalprices.com`) && PathPrefix(`/traefik`)
+      entryPoints:
+        - websecure
+      service: api@internal
+      tls:
+        certResolver: myresolver
+      middlewares:
+        - traefik-auth
+  middlewares:
+    traefik-auth:
+      basicAuth:
+        users:
+          - user:$$2y$$05$$6m8MvyzgJ4Kl7/3rL4X6VurX1huMas8a7oPB3x
