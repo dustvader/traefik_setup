@@ -30,7 +30,7 @@ http:
 
   routers:
     traefik:
-      rule: "Host(`appleglobalprices.com`)"
+      rule: "Host(`appleglobalprices.com`) && PathPrefix(`/traefik`)"
       service: "api@internal"
       middlewares:
         - "basic-auth"
